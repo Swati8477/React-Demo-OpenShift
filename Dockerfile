@@ -31,16 +31,31 @@
 # FROM nginx:1.17.1-alpine
 # COPY --from=build-step /app/build /usr/share/nginx/html
 
-#base of node alpine - light image
-FROM node:alpine
-#create a folder in docker
-WORKDIR '/app'
+# #base of node alpine - light image
+# FROM node:alpine
+# #create a folder in docker
+# WORKDIR '/app'
 
-#copy package.json in same root folder
-COPY package.json .
-#install the packages
-RUN npm install
-#copy all the content in docker file
+# #copy package.json in same root folder
+# COPY package.json .
+# #install the packages
+# RUN npm install
+# #copy all the content in docker file
+# COPY . .
+# #run the application
+# CMD [ "npm", "start" ]
+
+
+
+
+
+
+FROM node:10
+
+WORKDIR /app
+
 COPY . .
-#run the application
-CMD [ "npm", "start" ]
+
+EXPOSE 3000
+
+CMD ["npm","start"]
