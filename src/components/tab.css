@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Festive&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+.menu-price-book{}
+
+.img-div{}
+
+.Item-inside{}
+
+.item{}
+
+.menu-items{}
+
+.main-heading{
+    text-align: center;
+    font-family: "Festive", sans-serif;
+    font-size: 3rem;
+}
+
+.btn-warning{
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 10px 30px;
+    border-radius: 20px;
+    border-color: #fff;
+    transition: 0.5s;
+    color: #3498db;
+}
+
+.btn-warning:hover{
+    background-color: #3498db;
+    color: #fff;
+}
+
+.img-fluid{
+    height: 220px;
+}
+
+.main-title h1{
+    font-size: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.price-book-divide h2{
+    font-size: 20px;
+    font-weight: 400;
+    color: #4db6ac;
+}
+
+.price-book-divide{
+    margin-bottom: 10px;
+}
+
+.row{
+    margin-right: 0;
+    margin-left: 0px;
+}
+
+.btn-primary{
+    background-color: #4db6ac;
+    outline: none;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+
