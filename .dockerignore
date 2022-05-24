@@ -1,0 +1,7 @@
+Dockerfile
+.dockerignore
+.gitignore
+
+
+#Artifacts that will be built during creation
+node_modules
