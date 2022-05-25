@@ -92,5 +92,5 @@ RUN npm run build
 
 # Handle Nginx
 FROM nginx
-COPY --from=builder /frontend/build /var/cache/nginx/client_temp
+COPY --from=builder /frontend/build /user/share/nginx/html
 # COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
