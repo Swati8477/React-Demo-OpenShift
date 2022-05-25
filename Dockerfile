@@ -50,20 +50,47 @@
 
 
 
-FROM node:10 AS builder
+# FROM node:10 AS builder
 
-WORKDIR /app
+# WORKDIR /app
 
+# COPY . .
+
+# RUN npm install
+# RUN npm run build
+
+
+# FROM nginx:alpine
+
+# WORKDIR /usr/share/nginx/html
+
+# COPY --from=builder /app/build /usr/share/nginx/html
+
+# CMD ["nginx","-g","daemon off;"]
+
+
+
+
+
+# get the base node image
+FROM node:alpine as builder
+
+# set the working dir for container
+WORKDIR /frontend
+
+# copy the json file first
+COPY ./package.json /frontend
+
+# install npm dependencies
+RUN npm install
+
+# copy other project files
 COPY . .
 
-RUN npm install
+# build the folder
 RUN npm run build
 
-
-FROM nginx:alpine
-
-WORKDIR /usr/share/nginx/html
-
-COPY --from=builder /app/build /usr/share/nginx/html
-
-CMD ["nginx","-g","daemon off;"]
+# Handle Nginx
+FROM nginx
+COPY --from=builder /frontend/build /usr/share/nginx/html
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
