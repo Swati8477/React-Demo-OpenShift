@@ -1,17 +1,20 @@
-# FROM node:current-alpine
-# WORKDIR /app
+FROM node:16-alpine3.14
+WORKDIR '/app'
 
 # ENV PATH /app/node_modules/.bin:$PATH
 
-# COPY package*.json ./app
-# RUN npm install
+COPY package.json .
+RUN npm install
 
 # EXPOSE 8080
 
-# COPY . .
-# CMD ["npm","start"]
+COPY . .
+CMD ["npm","start"]
 
-# Step 1
+
+
+
+# #Step 1
 
 # FROM node:10-alpine as build-step
 
@@ -23,7 +26,7 @@
 
 # RUN npm install
 
-# COPY . /app
+# COPY ./ /app
 
 # RUN npm run build
 
@@ -31,13 +34,18 @@
 # FROM nginx:1.17.1-alpine
 # COPY --from=build-step /app/build /usr/share/nginx/html
 
+
+
+
+
+
 # #base of node alpine - light image
 # FROM node:alpine
 # #create a folder in docker
 # WORKDIR '/app'
 
 # #copy package.json in same root folder
-# COPY package.json .
+# COPY package.json ./
 # #install the packages
 # RUN npm install
 # #copy all the content in docker file
@@ -72,25 +80,35 @@
 
 
 
-# get the base node image
-FROM node:alpine as builder
 
-# set the working dir for container
-WORKDIR /frontend
 
-# copy the json file first
-COPY ./package.json /frontend
+# # get the base node image
+# FROM node:alpine as builder
 
-# install npm dependencies
-RUN npm install
+# # set the working dir for container
+# WORKDIR /frontend
 
-# copy other project files
-COPY . .
+# # copy the json file first
+# COPY ./package.json /frontend
 
-# build the folder
-RUN npm run build
+# # install npm dependencies
+# RUN npm install
 
-# Handle Nginx
-FROM nginx
-COPY --from=builder /frontend/build /usr/share/nginx/html
-# COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+# # copy other project files
+# COPY . .
+
+# # build the folder
+# RUN npm run build
+
+# # Handle Nginx
+# FROM nginx
+# COPY --from=builder /frontend/build /usr/share/nginx/html
+# # Copy the default nginx.conf provided by tiangolo/node-frontend
+# COPY --from=builder /nginx/default.conf /etc/nginx/conf.d/default.conf
+# # COPY --from=build-stage /app/build/ /usr/share/nginx/html
+
+# # COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+
+# EXPOSE 80
+# # Start nginx
+# CMD ["nginx", "-g", "daemon off;"]
