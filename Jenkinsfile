@@ -54,9 +54,10 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject("swatinegi1482-dev") {
                   def builds = openshift.selector("bc", templateName).related('builds')
-                    builds.untilEach(1) {
-                      return (it.object().status.phase == "Complete")
-                    
+			timeout(5){
+                    		builds.untilEach(1) {
+                      		return (it.object().status.phase == "Complete")
+		    	}
                   }
                 }
             }
@@ -69,7 +70,7 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject("swatinegi1482-dev") {
                   def rm = openshift.selector("dc", templateName).rollout().latest()
-                { 
+                timeout(5){ 
                     openshift.selector("dc", templateName).related('pods').untilEach(1) {
                       return (it.object().status.phase == "Running")
                     }
