@@ -140,10 +140,10 @@
 
 pipeline {
     agent { 
-//       node { 
-//         label 'nodejs' 
+      node { 
+        label 'nodejs' 
 //       }
-      docker {
+//       docker {
             image 'node:lts-buster-slim'
             args '-p 3000:3000'
         }
