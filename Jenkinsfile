@@ -164,7 +164,7 @@ pipeline {
                 //sh 'mvn org.codehaus.mojo:exec-maven-plugin:exec'
                sh 'npm install'
             }
-		}
+		
 	
 		
         stage("Quality Gate") {
