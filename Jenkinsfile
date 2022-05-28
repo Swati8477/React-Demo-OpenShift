@@ -148,15 +148,15 @@ pipeline {
         JENKINS_CRUMB = 'curl user username:password "<jenkins-url>/crumbIssuer/api/xml?xpath=concat(//crumbRequestField, \":\",//crumb)"'
 		
     }
-    stages {
-        stage("Checkout") {
-            steps {
-                load "environmentVariables.groovy"
-                echo "${env.DEV_SCM_REPOSITORY}"
-                echo "${env.DEV_SCM_BRANCH}"
-                git(url: "${env.DEV_SCM_REPOSITORY}", branch: "${env.DEV_SCM_BRANCH}", poll: true)
-            }
-        }
+    // stages {
+    //     stage("Checkout") {
+    //         steps {
+    //             load "environmentVariables.groovy"
+    //             echo "${env.DEV_SCM_REPOSITORY}"
+    //             echo "${env.DEV_SCM_BRANCH}"
+    //             git(url: "${env.DEV_SCM_REPOSITORY}", branch: "${env.DEV_SCM_BRANCH}", poll: true)
+    //         }
+    //     }
 
         stage("Build") {
         steps {
