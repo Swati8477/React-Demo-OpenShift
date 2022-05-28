@@ -101,9 +101,13 @@
 
 
 pipeline {
-  agent any
+   agent {
+     node {
+      label 'nodejs' 
+    }
+  } 
     
-  tools {nodejs "node"}
+//   tools {nodejs "node"}
     
   stages {
         
