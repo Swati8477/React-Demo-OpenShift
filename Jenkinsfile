@@ -140,7 +140,7 @@ def buildTag = env.BUILD_TAG
 def fileName = env.npmPack
 pipeline {
     agent { 
-    node { label 'master' }
+    node { label 'nodejs' }
      }
      
     environment {
