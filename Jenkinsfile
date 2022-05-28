@@ -1,6 +1,6 @@
 // /*=================================Jenkin file for React JS ==========================================*/
 
-def templatePath = 'react-application'
+def templatePath = 'https://github.com/Swati8477/React-Demo-OpenShift.git'
 def templateName = 'jenkins-react' 
 pipeline {
   agent {
