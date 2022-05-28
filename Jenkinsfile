@@ -1,98 +1,98 @@
 // /*=================================Jenkin file for React JS ==========================================*/
 
-def templatePath = 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-def templateName = 'jenkins-react' 
-pipeline {
-  agent {
-    node {
-      label 'nodejs' 
-    }
-  }
-  options {
-    timeout(time: 20, unit: 'MINUTES') 
-  }
-  stages {
-    stage('preamble') {
-        steps {
-            script {
-                openshift.withCluster() {
-                    openshift.withProject("swatinegi1482-dev") {
-                        echo "Using project: ${openshift.project()}"
-                    }
-                }
-            }
-        }
-    }
-    stage('cleanup') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
-                  openshift.selector("all", [ template : templateName ]).delete() 
-                  if (openshift.selector("secrets", templateName).exists()) { 
-                    openshift.selector("secrets", templateName).delete()
-                  }
-                }
-            }
-        }
-      }
-    }
-    stage('create') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
-                  openshift.newApp(templatePath) 
-                }
-            }
-        }
-      }
-    }
-    stage('build') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
-                  def builds = openshift.selector("bc", templateName).related('builds')
-			timeout(5){
-                    		builds.untilEach(1) {
-                      		return (it.object().status.phase == "Complete")
-		    	}
-                  }
-                }
-            }
-        }
-      }
-    }
-    stage('deploy') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
-                  def rm = openshift.selector("dc", templateName).rollout().latest()
-                timeout(5){ 
-                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
-                      return (it.object().status.phase == "Running")
-                    }
-                  }
-                }
-            }
-        }
-      }
-    }
-    stage('tag') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
-                }
-            }
-        }
-      }
-    }
-  }
-}
+// def templatePath = 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+// def templateName = 'jenkins-react' 
+// pipeline {
+//   agent {
+//     node {
+//       label 'nodejs' 
+//     }
+//   }
+//   options {
+//     timeout(time: 20, unit: 'MINUTES') 
+//   }
+//   stages {
+//     stage('preamble') {
+//         steps {
+//             script {
+//                 openshift.withCluster() {
+//                     openshift.withProject("swatinegi1482-dev") {
+//                         echo "Using project: ${openshift.project()}"
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     stage('cleanup') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject("swatinegi1482-dev") {
+//                   openshift.selector("all", [ template : templateName ]).delete() 
+//                   if (openshift.selector("secrets", templateName).exists()) { 
+//                     openshift.selector("secrets", templateName).delete()
+//                   }
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('create') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject("swatinegi1482-dev") {
+//                   openshift.newApp(templatePath) 
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('build') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject("swatinegi1482-dev") {
+//                   def builds = openshift.selector("bc", templateName).related('builds')
+// 			timeout(5){
+//                     		builds.untilEach(1) {
+//                       		return (it.object().status.phase == "Complete")
+// 		    	}
+//                   }
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('deploy') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject("swatinegi1482-dev") {
+//                   def rm = openshift.selector("dc", templateName).rollout().latest()
+//                 timeout(5){ 
+//                     openshift.selector("dc", templateName).related('pods').untilEach(1) {
+//                       return (it.object().status.phase == "Running")
+//                     }
+//                   }
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('tag') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject() {
+//                   openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
+//                 }
+//             }
+//         }
+//       }
+//     }
+//   }
+// }
 
 
 /*------------------------------------------------------------------------------------------
@@ -138,33 +138,46 @@ pipeline {
 
 /*=============================== New Jenkinsfile ============================*/
 
-// pipeline {
-//     agent { 
-//     node { label 'nodejs' }
-//      }
+pipeline {
+    agent { 
+      node { 
+        label 'nodejs' 
+      }
+      docker {
+            image 'node:lts-buster-slim'
+            args '-p 3000:3000'
+        }
+     }
      
-//     environment {
-//         CI = 'true'
-//         JENKINS_CRUMB = 'curl user username:password "<jenkins-url>/crumbIssuer/api/xml?xpath=concat(//crumbRequestField, \":\",//crumb)"'
-//     }
-//     stages {
-//         stage('Build') {
-//             steps {
-//                 sh 'npm install'
-//             }
-//         }
+    environment {
+        CI = 'true'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './jenkins/scripts/test.sh'
+            }
+        }
       
-//         stage('Deliver') {
-//             steps {
-//                 sh "chmod +x -R ${env.WORKSPACE}"
-//                 sh './jenkins/scripts/deliver.sh'
-//                 // input message: 'Finished using the web site? (Click "Proceed" to continue)'
-//                 // sh "chmod +x -R ${env.WORKSPACE}"
-//                 // sh './jenkins/scripts/kill.sh'
-//             }
-//         }
-//     }
-// }
+        stage('Deliver') {
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './jenkins/scripts/deliver.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+    }
+}
 
 
 
