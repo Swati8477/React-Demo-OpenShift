@@ -1,7 +1,5 @@
 // /*=================================Jenkin file for React JS ==========================================*/
 
-#! /usr/bin/env groovy
-
 def templatePath = 'react-application'
 def templateName = 'jenkins-react' 
 pipeline {
