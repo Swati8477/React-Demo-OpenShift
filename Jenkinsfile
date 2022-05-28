@@ -142,11 +142,11 @@ pipeline {
     agent { 
       node { 
         label 'nodejs' 
-//       }
+      }
 //       docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
+//             image 'node:lts-buster-slim'
+//             args '-p 3000:3000'
+//         }
      }
      
     environment {
