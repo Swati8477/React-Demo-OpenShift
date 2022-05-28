@@ -102,9 +102,12 @@
 /*=============================== New Jenkinsfile ============================*/
 
 pipeline {
-    agent { 
-    node { label 'nodejs' }
-     }
+    agent {
+        docker {
+            image 'node:16-alpine3.14'
+            args '-p 3000:3000'
+        }
+    }
      
     environment {
         CI = 'true'
@@ -121,9 +124,9 @@ pipeline {
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
                 sh 'deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './jenkins/scripts/kill.sh'
+                // input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                // sh "chmod +x -R ${env.WORKSPACE}"
+                // sh './jenkins/scripts/kill.sh'
             }
         }
     }
