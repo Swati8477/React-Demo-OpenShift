@@ -111,11 +111,11 @@ pipeline {
     
   stages {
         
-    stage('Git') {
-      steps {
-        git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-      }
-    }
+//     stage('Git') {
+//       steps {
+//         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+//       }
+//     }
      
     stage('Build') {
       steps {
