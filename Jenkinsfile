@@ -1,98 +1,135 @@
 // /*=================================Jenkin file for React JS ==========================================*/
 
-def templatePath = 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-def templateName = 'react-openshift-app' 
+// def templatePath = 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+// def templateName = 'jenkins-react' 
+// pipeline {
+//   agent {
+//     node {
+//       label 'nodejs' 
+//     }
+//   }
+//   options {
+//     timeout(time: 20, unit: 'MINUTES') 
+//   }
+//   stages {
+//     stage('preamble') {
+//         steps {
+//             script {
+//                 openshift.withCluster() {
+//                     openshift.withProject() {
+//                         echo "Using project: ${openshift.project()}"
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     stage('cleanup') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject() {
+//                   openshift.selector("all", [ template : templateName ]).delete() 
+//                   if (openshift.selector("secrets", templateName).exists()) { 
+//                     openshift.selector("secrets", templateName).delete()
+//                   }
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('create') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject() {
+//                   openshift.newApp(templatePath) 
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('build') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject() {
+//                   def builds = openshift.selector("bc", templateName).related('builds')
+//                 { 
+//                     builds.untilEach(1) {
+//                       return (it.object().status.phase == "Complete")
+//                     }
+//                   }
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('deploy') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject() {
+//                   def rm = openshift.selector("dc", templateName).rollout().latest()
+//                 { 
+//                     openshift.selector("dc", templateName).related('pods').untilEach(1) {
+//                       return (it.object().status.phase == "Running")
+//                     }
+//                   }
+//                 }
+//             }
+//         }
+//       }
+//     }
+//     stage('tag') {
+//       steps {
+//         script {
+//             openshift.withCluster() {
+//                 openshift.withProject() {
+//                   openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
+//                 }
+//             }
+//         }
+//       }
+//     }
+//   }
+// }
+
+
+/*------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------*/
+
+
+
 pipeline {
-  agent {
-    node {
-      label 'nodejs' 
-    }
-  }
-  options {
-    timeout(time: 20, unit: 'MINUTES') 
-  }
+  agent any
+    
+  tools {nodejs "node"}
+    
   stages {
-    stage('preamble') {
-        steps {
-            script {
-                openshift.withCluster() {
-                    openshift.withProject() {
-                        echo "Using project: ${openshift.project()}"
-                    }
-                }
-            }
-        }
-    }
-    stage('cleanup') {
+        
+    stage('Git') {
       steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.selector("all", [ template : templateName ]).delete() 
-                  if (openshift.selector("secrets", templateName).exists()) { 
-                    openshift.selector("secrets", templateName).delete()
-                  }
-                }
-            }
-        }
+        git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
       }
     }
-    stage('create') {
+     
+    stage('Build') {
       steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.newApp(templatePath) 
-                }
-            }
-        }
+        sh 'npm install'
+         sh 'npm run build'
       }
-    }
-    stage('build') {
+    }  
+    
+            
+    stage('Test') {
       steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  def builds = openshift.selector("bc", templateName).related('builds')
-                { 
-                    builds.untilEach(1) {
-                      return (it.object().status.phase == "Complete")
-                    }
-                  }
-                }
-            }
-        }
-      }
-    }
-    stage('deploy') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  def rm = openshift.selector("dc", templateName).rollout().latest()
-                { 
-                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
-                      return (it.object().status.phase == "Running")
-                    }
-                  }
-                }
-            }
-        }
-      }
-    }
-    stage('tag') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
-                }
-            }
-        }
+        sh 'node test'
       }
     }
   }
 }
+
+
 
 
 /*=============================== New Jenkinsfile ============================*/
@@ -173,12 +210,12 @@ pipeline {
 //         //     }
 //         // }
 
-// //          stage('Test') {
-// //             steps {
-// //                 sh "chmod +x -R ${env.WORKSPACE}"
-// //                 sh './jenkins/scripts/test.sh'
-// //             }
-// //         }
+//          stage('Test') {
+//             steps {
+//                 sh "chmod +x -R ${env.WORKSPACE}"
+//                 sh 'test.sh'
+//             }
+//         }
 
         
 //         stage('Pack artefacts'){
