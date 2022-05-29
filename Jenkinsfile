@@ -5,10 +5,10 @@ pipeline {
       node { 
         label 'nodejs' 
       }
-      docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
+//       docker {
+//             image 'node:lts-buster-slim'
+//             args '-p 3000:3000'
+//         }
      }
      
     environment {
@@ -22,12 +22,12 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './jenkins/scripts/test.sh'
-            }
-        }
+//         stage('Test') {
+//             steps {
+//                 sh "chmod +x -R ${env.WORKSPACE}"
+//                 sh './jenkins/scripts/test.sh'
+//             }
+//         }
       
         stage('Deliver') {
             steps {
