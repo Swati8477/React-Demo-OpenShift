@@ -2,12 +2,13 @@
 
 pipeline {
     agent { 
-      Dockerfile true
-//     docker { image 'node:16.13.1-alpine' }
-// //       docker {
-// //             image 'node:16.13.1-alpine'
-// //             args '-p 3000:3000'
-// //         }
+        node {label 'docker'}
+    //   dockerfile true
+    docker { image 'node:16.13.1-alpine' }
+//       docker {
+//             image 'node:16.13.1-alpine'
+//             args '-p 3000:3000'
+//         }
      }
      
     environment {
