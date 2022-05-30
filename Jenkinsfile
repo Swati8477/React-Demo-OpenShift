@@ -2,16 +2,13 @@
 
 pipeline {
     agent { 
-        // node {label 'docker'}
+        node {label 'nodejs'}
     //   dockerfile true
-    docker { 
-        image 'node:16.13.1-alpine' 
-        label 'docker'
-        }
-//       docker {
-//             image 'node:16.13.1-alpine'
-//             args '-p 3000:3000'
-//         }
+    // docker { 
+    //     image 'node:16.13.1-alpine' 
+    //     label 'docker'
+    //     args '-p 3000:3000'
+    //     }
      }
      
     environment {
@@ -20,6 +17,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh '''
+                    docker build . -t react-openshift
+                '''
                 sh 'npm install'
                 sh 'npm run build'
             }
