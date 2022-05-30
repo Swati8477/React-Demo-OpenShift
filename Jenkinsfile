@@ -52,7 +52,7 @@
                     stage('build') {
                       openshift.withCluster() {
                          openshift.withProject() {
-                            def bld = openshift.startBuild('${NAME}')
+                            def bld = openshift.startBuild('react-demo-openshift')
                             bld.untilEach {
                               return it.object().status.phase == "Running"
                             }
@@ -63,7 +63,7 @@
                     stage('deploy') {
                       openshift.withCluster() {
                         openshift.withProject() {
-                          def dc = openshift.selector('dc', '${NAME}')
+                          def dc = openshift.selector('dc', 'react-demo-openshift')
                           dc.rollout().latest()
                         }
                       }
