@@ -2,7 +2,8 @@
 
 pipeline {
     agent { 
-      dockerfile true
+    //   dockerfile true
+    docker { image 'node:16.13.1-alpine' }
 //       docker {
 //             image 'node:lts-buster-slim'
 //             args '-p 3000:3000'
