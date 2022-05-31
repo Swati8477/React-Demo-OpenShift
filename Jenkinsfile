@@ -167,7 +167,7 @@ pipeline {
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
-  agent any
+  agent 
 //   tools {node "nodejs" }
      node {label 'nodejs'}
   stages {
