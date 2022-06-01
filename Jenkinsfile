@@ -216,33 +216,104 @@
 
 
 
-node {
-    def app
+// node {
+//     def app
 
-    stage('Clone repository') {
+//     stage('Clone repository') {
       
 
-        checkout scm
-    }
+//         checkout scm
+//     }
 
-    stage('Build image') {
+//     stage('Build image') {
   
-       app = docker.build("swati8477/react-demo")
-    }
+//        app = docker.build("swati8477/react-demo")
+//     }
 
-    stage('Test image') {
+//     stage('Test image') {
   
 
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
-    }
+//         app.inside {
+//             sh 'echo "Tests passed"'
+//         }
+//     }
 
-    stage('Push image') {
+//     stage('Push image') {
         
-        docker.withRegistry('https://registry.hub.docker.com', 'git') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
+//         docker.withRegistry('https://registry.hub.docker.com', 'git') {
+//             app.push("${env.BUILD_NUMBER}")
+//             app.push("latest")
+//         }
+//     }
+// }
+
+
+
+
+
+
+#! /usr/bin/env groovy
+
+pipeline {
+
+  agent {
+    label 'nodejs'
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        echo 'Building..'
+        
+        sh 'npm install'
+        sh 'npm run build'
+      }
     }
+    stage('Create Container Image') {
+      steps {
+        echo 'Create Container Image..'
+        
+        script {
+
+          
+          openshift.withCluster() { 
+              openshift.withProject("swatinegi1482-dev") {
+  
+                    def buildConfigExists = openshift.selector("bc", "reactapplication").exists() 
+    
+                    if(!buildConfigExists){ 
+                      openshift.newBuild("--name=reactapplication", "--docker-image=registry.redhat.io/openshift4/jenkins-agent-nodejs-12-rhel7", "--binary") 
+                     } 
+    
+                    openshift.selector("bc", "reactapplication").startBuild("--from-file=target/simple-servlet-0.0.1-SNAPSHOT.war", "--follow") } }
+
+          }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying....'
+        script {
+
+          
+          openshift.withCluster() { 
+              openshift.withProject("swatinegi1482-dev") { 
+                             def deployment = openshift.selector("dc", "reactapplication") 
+
+                            if(!deployment.exists()){ 
+                              openshift.newApp('reactapplication', "--as-deployment-config").narrow('svc').expose() 
+                            } 
+
+                            timeout(5) { 
+                              openshift.selector("dc", "reactapplication").related('pods').untilEach(1) { 
+                                return (it.object().status.phase == "Running") 
+      } 
+    } 
+  } 
+}
+
+        }
+      }
+    }
+  }
 }
