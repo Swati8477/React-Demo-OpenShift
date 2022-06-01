@@ -179,7 +179,7 @@ pipeline {
 //         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
 //         refs 'main'
 //       }
-    }
+//    }
     stage('Build') {
        steps {
          sh 'npm install'
