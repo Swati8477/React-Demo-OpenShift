@@ -161,61 +161,61 @@
 
 
 
-pipeline {
+// pipeline {
     
-   agent 
-     {
-//   tools {nodejs "node" }
-     node {label 'nodejs'}      
-     }
+//    agent 
+//      {
+// //   tools {nodejs "node" }
+//      node {label 'nodejs'}      
+//      }
     
     
-  environment {
-    registry = "swati8477/react-demo"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
-  }
+//   environment {
+//     registry = "swati8477/react-demo"
+//     registryCredential = 'dockerhub'
+//     dockerImage = ''
+//   }
    
-  stages {
-//     stage('Cloning Git') {
+//   stages {
+// //     stage('Cloning Git') {
+// //       steps {
+// //         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+// //         refs 'main'
+// //       }
+// //    }
+//     stage('Build') {
+//        steps {
+//          sh 'npm install'
+//        }
+//     }
+//     stage('Test') {
 //       steps {
-//         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-//         refs 'main'
+//         sh 'npm test'
 //       }
-//    }
-    stage('Build') {
-       steps {
-         sh 'npm install'
-       }
-    }
-    stage('Test') {
-      steps {
-        sh 'npm test'
-      }
-    }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
-    }
-    stage('Deploy Image') {
-      steps{
-         script {
-            docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
-        }
-      }
-    }
-    // stage('Remove Unused docker image') {
-    //   steps{
-    //     sh "docker rmi $registry:$BUILD_NUMBER"
-    //   }
-    // }
-  }
-}
+//     }
+//     stage('Building image') {
+//       steps{
+//         script {
+//           dockerImage = docker.build registry + ":$BUILD_NUMBER"
+//         }
+//       }
+//     }
+//     stage('Deploy Image') {
+//       steps{
+//          script {
+//             docker.withRegistry( '', registryCredential ) {
+//             dockerImage.push()
+//           }
+//         }
+//       }
+//     }
+//     // stage('Remove Unused docker image') {
+//     //   steps{
+//     //     sh "docker rmi $registry:$BUILD_NUMBER"
+//     //   }
+//     // }
+//   }
+// }
 
 
 
