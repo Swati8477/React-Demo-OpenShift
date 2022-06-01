@@ -1,48 +1,48 @@
 /*=============================== New Jenkinsfile ============================*/
 
-pipeline {
-    agent { 
-        node {label 'nodejs'}
-    //   dockerfile true
-    // docker { 
-    //     image 'node:16.13.1-alpine' 
-    //     label 'docker'
-    //     args '-p 3000:3000'
-    //     }
-     }
+// pipeline {
+//     agent { 
+//         node {label 'nodejs'}
+//     //   dockerfile true
+//     // docker { 
+//     //     image 'node:16.13.1-alpine' 
+//     //     label 'docker'
+//     //     args '-p 3000:3000'
+//     //     }
+//      }
      
-    environment {
-        CI = 'true'
-    }
-    stages {
-        stage('Build') {
-            steps {
-                // sh '''
-                //     docker build . -t react-openshift
-                // '''
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
+//     environment {
+//         CI = 'true'
+//     }
+//     stages {
+//         stage('Build') {
+//             steps {
+//                 // sh '''
+//                 //     docker build . -t react-openshift
+//                 // '''
+//                 sh 'npm install'
+//                 sh 'npm run build'
+//             }
+//         }
 
-        stage('Test') {
-            steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './jenkins/scripts/test.sh'
-            }
-        }
+//         stage('Test') {
+//             steps {
+//                 sh "chmod +x -R ${env.WORKSPACE}"
+//                 sh './jenkins/scripts/test.sh'
+//             }
+//         }
       
-        stage('Deliver') {
-            steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './jenkins/scripts/kill.sh'
-            }
-        }
-    }
-}
+//         stage('Deliver') {
+//             steps {
+//                 sh "chmod +x -R ${env.WORKSPACE}"
+//                 sh './jenkins/scripts/deliver.sh'
+//                 input message: 'Finished using the web site? (Click "Proceed" to continue)'
+//                 sh "chmod +x -R ${env.WORKSPACE}"
+//                 sh './jenkins/scripts/kill.sh'
+//             }
+//         }
+//     }
+// }
 
 /*-----------------------------------------------------------
 -------------------------------------------------------------
@@ -161,58 +161,61 @@ pipeline {
 
 
 
-// pipeline {
-//   environment {
-//     registry = "swati8477/react-demo"
-//     registryCredential = 'dockerhub'
-//     dockerImage = ''
-//   }
-//      agent 
-//      {
-// //   tools {nodejs "node" }
-//   node {label 'nodejs'}
-        
-//      }
-//   stages {
-// //     stage('Cloning Git') {
-// //       steps {
-// //         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-// //         refs 'main'
-// //       }
-// //    }
-//     stage('Build') {
-//        steps {
-//          sh 'npm install'
-//        }
-//     }
-//     stage('Test') {
+pipeline {
+    
+   agent 
+     {
+//   tools {nodejs "node" }
+     node {label 'nodejs'}      
+     }
+    
+    
+  environment {
+    registry = "swati8477/react-demo"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+   
+  stages {
+//     stage('Cloning Git') {
 //       steps {
-//         sh 'npm test'
+//         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+//         refs 'main'
 //       }
-//     }
-//     stage('Building image') {
-//       steps{
-//         script {
-//           dockerImage = docker.build registry + ":$BUILD_NUMBER"
-//         }
-//       }
-//     }
-//     stage('Deploy Image') {
-//       steps{
-//          script {
-//             docker.withRegistry( '', registryCredential ) {
-//             dockerImage.push()
-//           }
-//         }
-//       }
-//     }
-//     // stage('Remove Unused docker image') {
-//     //   steps{
-//     //     sh "docker rmi $registry:$BUILD_NUMBER"
-//     //   }
-//     // }
-//   }
-// }
+//    }
+    stage('Build') {
+       steps {
+         sh 'npm install'
+       }
+    }
+    stage('Test') {
+      steps {
+        sh 'npm test'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    // stage('Remove Unused docker image') {
+    //   steps{
+    //     sh "docker rmi $registry:$BUILD_NUMBER"
+    //   }
+    // }
+  }
+}
 
 
 
