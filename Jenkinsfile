@@ -169,7 +169,7 @@ pipeline {
   }
      agent any
      //{
-//   tools {node "nodejs" }
+  tools {nodejs "node" }
 //   node {label 'nodejs'}
         
 //     }
