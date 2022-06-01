@@ -161,55 +161,88 @@
 
 
 
-pipeline {
-  environment {
-    registry = "swati8477/react-demo"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
-  }
-     agent 
-     {
-//   tools {nodejs "node" }
-  node {label 'nodejs'}
+// pipeline {
+//   environment {
+//     registry = "swati8477/react-demo"
+//     registryCredential = 'dockerhub'
+//     dockerImage = ''
+//   }
+//      agent 
+//      {
+// //   tools {nodejs "node" }
+//   node {label 'nodejs'}
         
-     }
-  stages {
-//     stage('Cloning Git') {
+//      }
+//   stages {
+// //     stage('Cloning Git') {
+// //       steps {
+// //         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+// //         refs 'main'
+// //       }
+// //    }
+//     stage('Build') {
+//        steps {
+//          sh 'npm install'
+//        }
+//     }
+//     stage('Test') {
 //       steps {
-//         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-//         refs 'main'
+//         sh 'npm test'
 //       }
-//    }
-    stage('Build') {
-       steps {
-         sh 'npm install'
-       }
+//     }
+//     stage('Building image') {
+//       steps{
+//         script {
+//           dockerImage = docker.build registry + ":$BUILD_NUMBER"
+//         }
+//       }
+//     }
+//     stage('Deploy Image') {
+//       steps{
+//          script {
+//             docker.withRegistry( '', registryCredential ) {
+//             dockerImage.push()
+//           }
+//         }
+//       }
+//     }
+//     // stage('Remove Unused docker image') {
+//     //   steps{
+//     //     sh "docker rmi $registry:$BUILD_NUMBER"
+//     //   }
+//     // }
+//   }
+// }
+
+
+
+node {
+    def app
+
+    stage('Clone repository') {
+      
+
+        checkout scm
     }
-    stage('Test') {
-      steps {
-        sh 'npm test'
-      }
+
+    stage('Build image') {
+  
+       app = docker.build("swati8477/react-demo")
     }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+
+    stage('Test image') {
+  
+
+        app.inside {
+            sh 'echo "Tests passed"'
         }
-      }
     }
-    stage('Deploy Image') {
-      steps{
-         script {
-            docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
+
+    stage('Push image') {
+        
+        docker.withRegistry('https://registry.hub.docker.com', 'git') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
         }
-      }
     }
-    // stage('Remove Unused docker image') {
-    //   steps{
-    //     sh "docker rmi $registry:$BUILD_NUMBER"
-    //   }
-    // }
-  }
 }
