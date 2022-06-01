@@ -255,7 +255,7 @@ pipeline {
 
 
 
-#! /usr/bin/env groovy
+
 
 pipeline {
 
