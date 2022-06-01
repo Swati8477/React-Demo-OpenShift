@@ -161,58 +161,61 @@
 
 
 
-// pipeline {
-//   environment {
-//     registry = "swati8477/react-demo"
-//     registryCredential = 'dockerhub'
-//     dockerImage = ''
-//   }
-//      agent 
-//      {
-// //   tools {nodejs "node" }
-//   node {label 'nodejs'}
-        
-//      }
-//   stages {
-// //     stage('Cloning Git') {
-// //       steps {
-// //         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-// //         refs 'main'
-// //       }
-// //    }
-//     stage('Build') {
-//        steps {
-//          sh 'npm install'
-//        }
-//     }
-//     stage('Test') {
+pipeline {
+    
+   agent 
+     {
+//   tools {nodejs "node" }
+     node {label 'nodejs'}      
+     }
+    
+    
+  environment {
+    registry = "swati8477/react-demo"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+   
+  stages {
+//     stage('Cloning Git') {
 //       steps {
-//         sh 'npm test'
+//         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
+//         refs 'main'
 //       }
-//     }
-//     stage('Building image') {
-//       steps{
-//         script {
-//           dockerImage = docker.build registry + ":$BUILD_NUMBER"
-//         }
-//       }
-//     }
-//     stage('Deploy Image') {
-//       steps{
-//          script {
-//             docker.withRegistry( '', registryCredential ) {
-//             dockerImage.push()
-//           }
-//         }
-//       }
-//     }
-//     // stage('Remove Unused docker image') {
-//     //   steps{
-//     //     sh "docker rmi $registry:$BUILD_NUMBER"
-//     //   }
-//     // }
-//   }
-// }
+//    }
+    stage('Build') {
+       steps {
+         sh 'npm install'
+       }
+    }
+    stage('Test') {
+      steps {
+        sh 'npm test'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    // stage('Remove Unused docker image') {
+    //   steps{
+    //     sh "docker rmi $registry:$BUILD_NUMBER"
+    //   }
+    // }
+  }
+}
 
 
 
@@ -285,7 +288,7 @@ pipeline {
                       openshift.newBuild("--name=reactapplication", "--docker-image=registry.redhat.io/openshift4/jenkins-agent-nodejs-12-rhel7", "--binary") 
                      } 
     
-                    openshift.selector("bc", "reactapplication").startBuild("--from-file=target/simple-servlet-0.0.1-SNAPSHOT.war", "--follow") } }
+                    openshift.selector("bc", "reactapplication").startBuild('npm run build', "--follow") } }
 
           }
       }
