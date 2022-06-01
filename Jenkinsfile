@@ -177,7 +177,7 @@ pipeline {
     stage('Cloning Git') {
       steps {
         git 'https://github.com/Swati8477/React-Demo-OpenShift.git'
-        branch 'main'
+        refs 'main'
       }
     }
     stage('Build') {
