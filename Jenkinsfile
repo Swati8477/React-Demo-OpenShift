@@ -1,48 +1,48 @@
 /*=============================== New Jenkinsfile ============================*/
 
-// pipeline {
-//     agent { 
-//         node {label 'nodejs'}
-//     //   dockerfile true
-//     // docker { 
-//     //     image 'node:16.13.1-alpine' 
-//     //     label 'docker'
-//     //     args '-p 3000:3000'
-//     //     }
-//      }
+pipeline {
+    agent { 
+        node {label 'nodejs'}
+    //   dockerfile true
+    // docker { 
+    //     image 'node:16.13.1-alpine' 
+    //     label 'docker'
+    //     args '-p 3000:3000'
+    //     }
+     }
      
-//     environment {
-//         CI = 'true'
-//     }
-//     stages {
-//         stage('Build') {
-//             steps {
-//                 // sh '''
-//                 //     docker build . -t react-openshift
-//                 // '''
-//                 sh 'npm install'
-//                 sh 'npm run build'
-//             }
-//         }
+    environment {
+        CI = 'true'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                // sh '''
+                //     docker build . -t react-openshift
+                // '''
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
 
-//         stage('Test') {
-//             steps {
-//                 sh "chmod +x -R ${env.WORKSPACE}"
-//                 sh './jenkins/scripts/test.sh'
-//             }
-//         }
+        stage('Test') {
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './jenkins/scripts/test.sh'
+            }
+        }
       
-//         stage('Deliver') {
-//             steps {
-//                 sh "chmod +x -R ${env.WORKSPACE}"
-//                 sh './jenkins/scripts/deliver.sh'
-//                 input message: 'Finished using the web site? (Click "Proceed" to continue)'
-//                 sh "chmod +x -R ${env.WORKSPACE}"
-//                 sh './jenkins/scripts/kill.sh'
-//             }
-//         }
-//     }
-// }
+        stage('Deliver') {
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './jenkins/scripts/deliver.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+    }
+}
 
 /*-----------------------------------------------------------
 -------------------------------------------------------------
@@ -216,33 +216,33 @@
 
 
 
-node {
-    def app
+// node {
+//     def app
 
-    stage('Clone repository') {
+//     stage('Clone repository') {
       
 
-        checkout scm
-    }
+//         checkout scm
+//     }
 
-    stage('Build image') {
+//     stage('Build image') {
   
-       app = docker.build("swati8477/react-demo")
-    }
+//        app = docker.build("swati8477/react-demo")
+//     }
 
-    stage('Test image') {
+//     stage('Test image') {
   
 
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
-    }
+//         app.inside {
+//             sh 'echo "Tests passed"'
+//         }
+//     }
 
-    stage('Push image') {
+//     stage('Push image') {
         
-        docker.withRegistry('https://registry.hub.docker.com', 'git') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
-    }
-}
+//         docker.withRegistry('https://registry.hub.docker.com', 'git') {
+//             app.push("${env.BUILD_NUMBER}")
+//             app.push("latest")
+//         }
+//     }
+// }
