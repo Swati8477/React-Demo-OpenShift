@@ -172,7 +172,7 @@ pipeline {
 //   tools {node "nodejs" }
 //   node {label 'nodejs'}
         
-     }
+//     }
   stages {
     stage('Cloning Git') {
       steps {
