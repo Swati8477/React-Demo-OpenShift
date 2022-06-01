@@ -169,8 +169,8 @@ pipeline {
   }
      agent any
      //{
-  tools {nodejs "node" }
-//   node {label 'nodejs'}
+//   tools {nodejs "node" }
+  node {label 'nodejs'}
         
 //     }
   stages {
