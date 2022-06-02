@@ -57,7 +57,7 @@ pipeline {
         
         sh 'npm install'
         sh 'npm install -g serve'
-        sh 'serve -s build'
+        sh 'seserve -s build -l 8080'
         // sh 'npm run build'
       }
     }
