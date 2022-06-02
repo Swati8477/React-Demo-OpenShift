@@ -56,8 +56,8 @@ pipeline {
         echo 'Building..'
         
         sh 'npm install'
-        sh 'npm install -g serve'
-        sh 'serve -s build -l 8080'
+        // sh 'npm install -g serve'
+        // sh 'serve -s build -l 8080'
         // sh 'npm run build'
       }
     }
@@ -90,7 +90,7 @@ pipeline {
           
           openshift.withCluster() { 
               openshift.withProject("swatinegi406-dev") { 
-                             def deployment = openshift.selector("dc", "reactapplication") 
+                            def deployment = openshift.selector("dc", "reactapplication") 
 
                             if(!deployment.exists()){ 
                               openshift.newApp('reactapplication', "--as-deployment-config").narrow('svc').expose() 
