@@ -75,7 +75,7 @@ pipeline {
                       openshift.newBuild("--name=reactapplication", "--docker-image=registry.redhat.io/openshift4/jenkins-agent-nodejs-12-rhel7", "--binary") 
                      } 
     
-                    openshift.selector("bc", "reactapplication").startBuild('npm run build', "--follow") } }
+                    openshift.selector("bc", "reactapplication").startBuild('--from-file=build', "--follow") } }
 
           }
       }
