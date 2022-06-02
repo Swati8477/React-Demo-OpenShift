@@ -56,7 +56,7 @@ pipeline {
         echo 'Building..'
         
         sh 'npm install'
-        sh 'npm run build'
+        // sh 'npm run build'
       }
     }
     stage('Create Container Image') {
