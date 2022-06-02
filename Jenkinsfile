@@ -56,6 +56,8 @@ pipeline {
         echo 'Building..'
         
         sh 'npm install'
+        sh 'npm install -g serve'
+        sh 'serve -s build'
         // sh 'npm run build'
       }
     }
