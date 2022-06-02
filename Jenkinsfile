@@ -72,7 +72,7 @@ pipeline {
                     def buildConfigExists = openshift.selector("bc", "reactapplication").exists() 
     
                     if(!buildConfigExists){ 
-                      openshift.newBuild("--name=reactapplication", "--docker-image=registry.redhat.io/openshift4/jenkins-agent-nodejs-12-rhel7", "--binary") 
+                      openshift.newBuild("--name=reactapplication", "--docker-image=hub.docker.com/repository/docker/swati8477/react-demo/", "--binary") 
                      } 
     
                     openshift.selector("bc", "reactapplication").startBuild('--from-file=build', "--follow") } }
