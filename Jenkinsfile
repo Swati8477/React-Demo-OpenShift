@@ -58,7 +58,7 @@ pipeline {
         sh 'npm install'
         // sh 'npm install -g serve'
         // sh 'serve -s build -l 8080'
-        // sh 'npm run build'
+        sh 'npm run build'
       }
     }
     stage('Create Container Image') {
@@ -77,7 +77,7 @@ pipeline {
                       openshift.newBuild("--name=reactapplication", "--docker-image=registry.access.redhat.com/ubi8/nodejs-16:1-37.1652296488", "--binary") 
                      } 
     
-                    openshift.selector("bc", "reactapplication").startBuild('--from-file=./package.json', '--follow') 
+                    openshift.selector("bc", "reactapplication").startBuild('--from-file=./build', '--follow') 
                 } 
             }
 
