@@ -131,7 +131,7 @@ pipeline {
         steps {
             script {
                 openshift.withCluster() {
-                    openshift.withProject("swatinegi1482-dev") {
+                    openshift.withProject("swatinegi406-dev") {
                         echo "Using project: ${openshift.project()}"
                     }
                 }
@@ -142,7 +142,7 @@ pipeline {
       steps {
         script {
             openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
+                openshift.withProject("swatinegi406-dev") {
                   openshift.selector("all", [ template : templateName ]).delete() 
                   if (openshift.selector("secrets", templateName).exists()) { 
                     openshift.selector("secrets", templateName).delete()
@@ -156,7 +156,7 @@ pipeline {
       steps {
         script {
             openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
+                openshift.withProject("swatinegi406-dev") {
                   openshift.newApp(templatePath) 
                 }
             }
@@ -167,7 +167,7 @@ pipeline {
       steps {
         script {
             openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
+                openshift.withProject("swatinegi406-dev") {
                   def builds = openshift.selector("bc", templateName).related('builds')
 			timeout(5){
                     		builds.untilEach(1) {
@@ -183,7 +183,7 @@ pipeline {
       steps {
         script {
             openshift.withCluster() {
-                openshift.withProject("swatinegi1482-dev") {
+                openshift.withProject("swatinegi406-dev") {
                   def rm = openshift.selector("dc", templateName).rollout().latest()
                 timeout(5){ 
                     openshift.selector("dc", templateName).related('pods').untilEach(1) {
