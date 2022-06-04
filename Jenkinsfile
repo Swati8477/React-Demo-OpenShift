@@ -97,7 +97,7 @@ pipeline {
                             def deployment = openshift.selector("dc", "reactapplication") 
 
                             if(!deployment.exists()){ 
-                              openshift.newApp('reactapplication', "--as-deployment-config").narrow('svc').expose() 
+                              openshift.newApp('reactapplication', "--as-deployment-config").narrow('svc').expose('8080') 
                             } 
 
                             timeout(5) { 
