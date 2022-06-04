@@ -77,7 +77,9 @@ pipeline {
                       openshift.newBuild("--name=reactapplication", "--docker-image=registry.access.redhat.com/ubi8/nodejs-16:1-37.1652296488", "--binary") 
                      } 
     
-                    openshift.selector("bc", "reactapplication").startBuild('--from-file=./package.json', '--follow') 
+                    def build = openshift.selector("bc", "reactapplication").startBuild('--from-file .')
+                    build.logs('-f')
+
                 } 
             }
 
